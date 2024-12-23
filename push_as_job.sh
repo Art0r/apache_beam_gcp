@@ -13,7 +13,8 @@ python main.py \
   --region="us-central1" \
   --temp_location="gs://curso-apache-beam-gcp-n/temp" \
   --staging_location="gs://curso-apache-beam-gcp-n/staging" \
-  --template_location="gs://curso-apache-beam-gcp-n/template/curso-apache-beam-postgres-bq-local-teste"
+  --template_location="gs://curso-apache-beam-gcp-n/template/curso-apache-beam-postgres-bq-local-teste" \
+  --pipeline="postgres"
 
 gcloud dataflow jobs run curso-apache-beam-gcp-job-qwer121231124 \
   --gcs-location gs://curso-apache-beam-gcp-n/template/curso-apache-beam-postgres-bq-local-teste \

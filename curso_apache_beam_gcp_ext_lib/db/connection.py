@@ -6,7 +6,7 @@ import pg8000
 import sqlalchemy
 
 
-def connect_with_database() -> sqlalchemy.engine.base.Engine:
+def connect_with_postgres_database() -> sqlalchemy.engine.base.Engine:
     """
     Initializes a connection pool for a Cloud SQL instance of Postgres.
     Uses the Cloud SQL Python Connector package.
@@ -34,7 +34,8 @@ def connect_with_database() -> sqlalchemy.engine.base.Engine:
     pool = sqlalchemy.create_engine(
         "postgresql+pg8000://",
         creator=getconn,
-        # ...
+        pool_size=5,  # Adjust pool size as needed
+        max_overflow=2,
     )
     
     return pool
