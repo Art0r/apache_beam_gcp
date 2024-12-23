@@ -1,40 +1,25 @@
 """
 DoFn classes
 """
-import psycopg2 as pg
 import apache_beam as beam
-
+from curso_apache_beam_gcp_ext_lib.db import connection
+from sqlalchemy import text
 
 class ReadUsersFromPostgres(beam.DoFn):
-    def __init__(self, db_config: dict, *unused_args, **unused_kwargs):
+    def __init__(self, *unused_args, **unused_kwargs):
         super().__init__(*unused_args, **unused_kwargs)
-        self.db_config = db_config
-        self._conn = None
-        self._cursor = None
 
     def setup(self):
-        self._conn = pg.connect(**self.db_config)
-        self._cursor = self._conn.cursor()
+        pass
 
     def process(self, element):
-        self._cursor.execute("SELECT * FROM users")
-        yield from self._cursor.fetchall()
+        with connection.connect_with_database().connect() as conn:
+            result = conn.execute(text("SELECT * FROM users"))
+            yield from result.fetchall()
+            conn.close()
 
     def teardown(self):
-        if self._cursor:
-            self._cursor.close()
-        if self._conn:
-            self._conn.close()
-
-    def __getstate__(self):
-        state = self.__dict__.copy()
-        state["_conn"] = None
-        state["_cursor"] = None
-        return state
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-
+        pass
 
 class FormatUsersToBq(beam.DoFn):
     def process(self, element):
@@ -42,7 +27,7 @@ class FormatUsersToBq(beam.DoFn):
 
         if not isinstance(name, str) or not name.strip():
             name = "Unknown"
-        if not isinstance(email, str) or "@" not in email or "." not in email:
+        if not isinstance(email, str) or "@" not in email or "." not in email or "@." in email or ".@" in email:
             email = "invalid@example.com"
         if not isinstance(age, int) or age <= 0:
             age = None

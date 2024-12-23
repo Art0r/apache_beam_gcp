@@ -12,7 +12,7 @@ setup(
         "cloud-sql-python-connector==1.15.0",
         "SQLAlchemy==2.0.36",
         "apache-beam==2.61.0",
-        "pg8000==1.31.2"
+        "pg8000==1.31.2",
         "build",
     ],
     packages=find_packages(

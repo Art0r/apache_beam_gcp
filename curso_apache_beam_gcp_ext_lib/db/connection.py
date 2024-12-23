@@ -6,23 +6,11 @@ import pg8000
 import sqlalchemy
 
 
-def connect_with_connector() -> sqlalchemy.engine.base.Engine:
+def connect_with_database() -> sqlalchemy.engine.base.Engine:
     """
     Initializes a connection pool for a Cloud SQL instance of Postgres.
-
     Uses the Cloud SQL Python Connector package.
     """
-    # Note: Saving credentials in environment variables is convenient, but not
-    # secure - consider a more secure solution such as
-    # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
-    # keep secrets safe.
-
-    # instance_connection_name = os.environ[
-    #     "INSTANCE_CONNECTION_NAME"
-    # ]  # e.g. 'project:region:instance'
-    # db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
-    # db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
-    # db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get(
         "PRIVATE_IP") else IPTypes.PUBLIC
@@ -32,11 +20,11 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
 
     def getconn() -> pg8000.dbapi.Connection:
         conn: pg8000.dbapi.Connection = connector.connect(
-            "curso-apache-beam-gcp:us-central1:curso-apache-beam-gcp-psql",
-            "pg8000",
-            user="postgres",
-            password="Xcz}E?jt~|-#v0J|",
-            db="postgres",
+            instance_connection_string=os.environ.get("PSQL_INSTANCE_NAME"),
+            driver="pg8000",
+            user=os.environ.get('PSQL_USER'),
+            password=os.environ.get('PSQL_PASSWORD'),
+            db=os.environ.get('PSQL_NAME'),
             ip_type=ip_type,
         )
         return conn
