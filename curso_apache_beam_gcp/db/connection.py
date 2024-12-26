@@ -4,6 +4,7 @@ from google.cloud.sql.connector import Connector, IPTypes
 import pg8000
 
 import sqlalchemy
+from curso_apache_beam_gcp.env_vars import find_value_for_keys
 
 
 def connect_with_postgres_database() -> sqlalchemy.engine.base.Engine:
@@ -18,13 +19,21 @@ def connect_with_postgres_database() -> sqlalchemy.engine.base.Engine:
     # initialize Cloud SQL Python Connector object
     connector = Connector()
 
+    secrets = find_value_for_keys(
+        "PSQL_INSTANCE_NAME", "PSQL_USER", "PSQL_PASSWORD", "PSQL_NAME")
+
+    instance_connection_string = secrets.get('PSQL_INSTANCE_NAME', '')
+    user = secrets.get('PSQL_USER')
+    password = secrets.get('PSQL_PASSWORD')
+    db = secrets.get('PSQL_NAME')
+
     def getconn() -> pg8000.dbapi.Connection:
         conn: pg8000.dbapi.Connection = connector.connect(
-            instance_connection_string=os.environ.get("PSQL_INSTANCE_NAME"),
-            driver="pg8000",
-            user=os.environ.get('PSQL_USER'),
-            password=os.environ.get('PSQL_PASSWORD'),
-            db=os.environ.get('PSQL_NAME'),
+            instance_connection_string,
+            "pg8000",
+            user=user,
+            password=password,
+            db=db,
             ip_type=ip_type,
         )
         return conn
@@ -37,5 +46,5 @@ def connect_with_postgres_database() -> sqlalchemy.engine.base.Engine:
         pool_size=5,  # Adjust pool size as needed
         max_overflow=2,
     )
-    
+
     return pool

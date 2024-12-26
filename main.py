@@ -1,8 +1,10 @@
 """
 Dataflow Job/Pipeline to retrieve data from Posgresql and transform then upload to BigQuery
 """
-from curso_apache_beam_gcp_ext_lib.pipeline_laucher import run_pipeline
+from curso_apache_beam_gcp.pipeline_laucher import run_pipeline
+from curso_apache_beam_gcp.env_vars import init_env_vars
 import logging
+import os
 
 logger = logging.getLogger()
 
