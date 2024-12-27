@@ -50,4 +50,5 @@ def assign_pair_key_value_to_env(key_value: str) -> None:
 
 def init_env_vars() -> None:
 
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "curso-apache-beam-gcp.json"
+    if os.environ.get('GOOGLE_CLOUD_PROJECT') is None:
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "curso-apache-beam-gcp.json"
