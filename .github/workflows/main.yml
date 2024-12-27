@@ -32,6 +32,8 @@ jobs:
         gcloud config set project curso-apache-beam-gcp
 
     - name: Creating template
+      env:
+        GOOGLE_CLOUD_PROJECT: curso-apache-beam-gcp
       run: |
         python main.py \
             --setup_file="./setup.py" \
