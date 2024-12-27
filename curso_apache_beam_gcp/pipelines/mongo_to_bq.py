@@ -1,4 +1,5 @@
 import logging
+import os
 import apache_beam as beam
 from curso_apache_beam_gcp.beam_custom_classes import FormatUsersFromMongoDbToBq
 from curso_apache_beam_gcp.env_vars import find_value_for_keys
@@ -40,7 +41,7 @@ def run_pipeline(p: beam.Pipeline,
 
         logger.info("Loading MongoDB data into BigQuery")
         mongodb_result | 'Enviando para o Big Query (MongoDB)' >> beam.io.WriteToBigQuery(
-            table="curso-apache-beam-gcp.cursoapachebeamgcpdataset.users",
+            table=os.environ.get('GCP_BIGQUERY_TABLES'),
             schema="SCHEMA_AUTODETECT",
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED)

@@ -16,6 +16,7 @@ if __name__ == "__main__":
             "apache-beam[gcp]==2.61.0",
             "pg8000==1.31.2",
             "certifi==2024.12.14",
+            "python-dotenv==1.0.1",
             "build",
             "setuptools"
         ],

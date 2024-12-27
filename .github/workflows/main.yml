@@ -1,4 +1,4 @@
-name: Upload template and staging files to Storage
+name: Upload template and staging files
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Installing python packages
+    - name: Installing package
       run: |
         pip install -e .
 
@@ -33,15 +33,21 @@ jobs:
 
     - name: Creating template
       env:
-        GOOGLE_CLOUD_PROJECT: curso-apache-beam-gcp
+        GOOGLE_CLOUD_PROJECT: ${{ GOOGLE_CLOUD_PROJECT }}
+        GCP_STORAGE_BUCKET_TEMP: ${{ GCP_STORAGE_BUCKET_TEMP }}
+        GCP_STORAGE_BUCKET_STAGING: ${{ GCP_STORAGE_BUCKET_STAGING }}
+        GCP_STORAGE_BUCKET_TEMPLATE: ${{ GCP_STORAGE_BUCKET_TEMPLATE }}
+        GCP_STORAGE_BUCKET_REGION: ${{ GCP_STORAGE_BUCKET_REGION }}
+        GCP_BIGQUERY_TABLES: ${{ GCP_BIGQUERY_TABLES }}
+        GCP_SECRET_ID: ${{ GCP_BIGQUERY_TABLES }}
+
       run: |
         python main.py \
             --setup_file="./setup.py" \
             --runner="DataflowRunner" \
-            --project="curso-apache-beam-gcp" \
-            --region="us-central1" \
-            --temp_location="gs://curso-apache-beam-gcp-n/temp" \
-            --staging_location="gs://curso-apache-beam-gcp-n/staging" \
-            --template_location="gs://curso-apache-beam-gcp-n/template/postgres-mongodb-to-bq" \
+            --project="$GOOGLE_CLOUD_PROJECT" \
+            --region="$GCP_STORAGE_BUCKET_REGION" \
+            --temp_location="$GCP_STORAGE_BUCKET_TEMP" \
+            --staging_location="$GCP_STORAGE_BUCKET_STAGING" \
+            --template_location="$GCP_STORAGE_BUCKET_TEMPLATE" \
             --save_main_session
-

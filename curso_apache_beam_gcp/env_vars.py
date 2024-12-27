@@ -19,8 +19,12 @@ def find_value_for_keys(*keys) -> dict[str, str]:
 
     keys_values_dict: dict[str, str] = {}
 
-    keys_pairs = [key_pair for key_pair in access_secret_version(project_id="curso-apache-beam-gcp",
-                                                                 secret_id="psql-bq-dataflow").split('\n')]
+    keys_pairs = [
+        key_pair for key_pair in access_secret_version(
+            project_id=os.environ.get('GOOGLE_CLOUD_PROJECT'),
+            secret_id=os.environ.get('GCP_SECRET_ID', '')
+        ).split('\n')
+    ]
 
     for key in keys:
 
