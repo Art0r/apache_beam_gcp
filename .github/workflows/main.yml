@@ -1,4 +1,4 @@
-name: Trigger on Push to Main
+name: Upload template and staging files to Storage
 
 on:
   push:
@@ -10,23 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: checkout
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: Set up python env
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    - name: Install Packages
+    - name: Installing python packages
       run: |
         pip install -e .
 
-    - name: Run Tests
+    - name: Creating template
       run: |
-        echo "Running Tests"
-
-    - name: Create Template
-      run: |
-        echo "Creating template for Dataflow Job"
+        python main.py \
+            --setup_file="./setup.py" \
+            --runner="DataflowRunner" \
+            --project="curso-apache-beam-gcp" \
+            --region="us-central1" \
+            --temp_location="gs://curso-apache-beam-gcp-n/temp" \
+            --staging_location="gs://curso-apache-beam-gcp-n/staging" \
+            --template_location="gs://curso-apache-beam-gcp-n/template/postgres-mongodb-to-bq" \
+            --save_main_session
 
