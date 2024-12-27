@@ -1,0 +1,32 @@
+name: Trigger on Push to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Packages
+      run: |
+        pip install -e .
+
+    - name: Run Tests
+      run: |
+        echo "Running Tests"
+
+    - name: Create Template
+      run: |
+        echo "Creating template for Dataflow Job"
+
