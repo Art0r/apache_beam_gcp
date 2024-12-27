@@ -22,6 +22,15 @@ jobs:
       run: |
         pip install -e .
 
+    - name: Authenticate with Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Set GCP project
+      run: |
+        gcloud config set project curso-apache-beam-gcp
+
     - name: Creating template
       run: |
         python main.py \
